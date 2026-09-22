@@ -102,6 +102,7 @@ const SUPABASE_URL = window.PORTAL_CONFIG && window.PORTAL_CONFIG.SUPABASE_URL;
 const SUPABASE_ANON_KEY = window.PORTAL_CONFIG && window.PORTAL_CONFIG.SUPABASE_ANON_KEY;
 const VIEWER_BASE = (window.PORTAL_CONFIG && window.PORTAL_CONFIG.VIEWER_BASE) || '/dicom-viewer';
 const TOKEN_URL = (window.PORTAL_CONFIG && window.PORTAL_CONFIG.TOKEN_URL) || '/.netlify/functions/get-viewer-token';
+const STUDY_JSON_URL = (window.PORTAL_CONFIG && window.PORTAL_CONFIG.STUDY_JSON_URL) || '/.netlify/functions/study-json';
 
 let sb = null;
 
@@ -204,7 +205,7 @@ async function openStudy(studyUid, btn) {
     el('listMsg').textContent = 'Could not open study: ' + (data.error || ('HTTP ' + resp.status));
     return;
   }
-  const jsonUrl = TOKEN_URL + '?token=' + encodeURIComponent(data.token) +
+  const jsonUrl = STUDY_JSON_URL + '?token=' + encodeURIComponent(data.token) +
     '&study=' + encodeURIComponent(studyUid);
   const viewerUrl = VIEWER_BASE + '/viewer/dicomjson?url=' + encodeURIComponent(jsonUrl);
   window.open(viewerUrl, '_blank');

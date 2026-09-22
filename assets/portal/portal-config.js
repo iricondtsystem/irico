@@ -6,4 +6,5 @@ window.PORTAL_CONFIG = {
   SUPABASE_ANON_KEY: 'sb_publishable_QozEGwOQZ67Xqz5Dcv0NOw_ylblgr3F',
   VIEWER_BASE: '/dicom-viewer',
   TOKEN_URL: '/.netlify/functions/get-viewer-token',
+  STUDY_JSON_URL: '/.netlify/functions/study-json',
 };
