@@ -24,7 +24,12 @@ exports.handler = async (event) => {
 
   const { getSupabaseAdmin } = require('./_shared');
   const admin = getSupabaseAdmin();
-  const studyUid = (event.queryStringParameters || {}).study;
+
+  let body = {};
+  try { body = JSON.parse(event.body || '{}') || {}; } catch {}
+  const studyUid =
+    (event.queryStringParameters || {}).study ||
+    body.study;
 
   if (!studyUid) {
     return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing study' }) };
