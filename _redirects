@@ -1,0 +1,2 @@
+# DICOM viewer (OHIF) SPA fallback - only for /dicom-viewer/* paths
+/dicom-viewer/*  /dicom-viewer/index.html  200
