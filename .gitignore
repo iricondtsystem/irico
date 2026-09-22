@@ -4,3 +4,4 @@ node_modules
 .DS_Store
 ._*
 supabase/.temp
+# Deploy builds functions on Netlify CI (must npm install @supabase/supabase-js)
