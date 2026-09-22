@@ -184,15 +184,24 @@ async function loadStudies(session) {
 async function openStudy(studyUid, btn) {
   btn.textContent = 'Opening&#8230;';
   const { data: { session } } = await sb.auth.getSession();
-  const { data, error } = await sb.functions.invoke('get-viewer-token', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${session.access_token}` },
-    body: JSON.stringify({ study: studyUid }),
-  });
-  if (error || !data?.token) {
+  // Token comes from the Netlify function (not a Supabase edge/functions URL),
+  // so call it directly with the user's JWT.
+  let resp, data;
+  try {
+    resp = await fetch(TOKEN_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
+      body: JSON.stringify({ study: studyUid }),
+    });
+    data = await resp.json().catch(() => ({}));
+  } catch (e) {
+    data = { error: e.message || 'network error' };
+    resp = { ok: false };
+  }
+  if (!resp.ok || !data.token) {
     btn.textContent = 'Open in Viewer';
     el('listMsg').className = 'msg err';
-    el('listMsg').textContent = 'Could not open study: ' + (error?.message || 'no token');
+    el('listMsg').textContent = 'Could not open study: ' + (data.error || ('HTTP ' + resp.status));
     return;
   }
   const jsonUrl = TOKEN_URL + '?token=' + encodeURIComponent(data.token) +
