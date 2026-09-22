@@ -84,7 +84,7 @@ th { color:#555; font-size:12px; text-transform:uppercase; }
     <h2>DICOM management</h2>
     <div class="tabs">
       <button id="tabUpload" class="active" onclick="tab('upload')">Upload</button>
-      <button id="tabClients" onclick="tab('clients')">Clients</button>
+      <button id="tabClients" onclick="tab('clients')">Customers</button>
     </div>
   </div>
 
@@ -95,12 +95,12 @@ th { color:#555; font-size:12px; text-transform:uppercase; }
 
       <div class="row">
         <div>
-          <label for="clientSelect">Client (destination folder)</label>
+          <label for="clientSelect">Customer (destination folder)</label>
           <select id="clientSelect"></select>
         </div>
         <div>
           <label>&nbsp;</label>
-          <button class="secondary" id="newClientBtn" style="width:100%;" onclick="tab('clients')">+ New client</button>
+          <button class="secondary" id="newClientBtn" style="width:100%;" onclick="tab('clients')"+ New customer</button>
         </div>
       </div>
 
@@ -118,25 +118,25 @@ th { color:#555; font-size:12px; text-transform:uppercase; }
 
     <div id="clientsTab" class="hidden">
       <div id="clientMsg" class="msg"></div>
-      <h3 style="margin-bottom:12px;font-size:14px;">Existing clients</h3>
+      <h3 style="margin-bottom:12px;font-size:14px;">Existing customers</h3>
       <div id="clientTable"></div>
 
-      <h3 style="margin:22px 0 12px;font-size:14px;">Add a client</h3>
+      <h3 style="margin:22px 0 12px;font-size:14px;">Add a customer</h3>
       <div class="row">
         <div>
-          <label for="ncName">Client name</label>
+          <label for="ncName"Customer name</label>
           <input type="text" id="ncName" placeholder="e.g. Larsen &amp; Toubro">
         </div>
         <div>
-          <label for="ncEmail">Client login email (optional)</label>
-          <input type="email" id="ncEmail" placeholder="client@company.com">
+          <label for="ncEmail">Customer login email (optional)</label>
+          <input type="email" id="ncEmail" placeholder="customer@company.com">
         </div>
         <div>
           <label for="ncPass">Login password (optional)</label>
           <input type="password" id="ncPass" placeholder="minimum 6 chars">
         </div>
       </div>
-      <button id="createClientBtn">Create client</button>
+      <button id="createClientBtn">Create customer</button>
     </div>
 
   </div>
@@ -264,7 +264,7 @@ function fmtSize(b) { return b > 1048576 ? (b/1048576).toFixed(1) + ' MB' : Math
 
 el('uploadBtn').addEventListener('click', async () => {
   if (!pendingFiles.length) return;
-  if (!currentClientId) { appMsg('Select a client first.', 'err'); return; }
+  if (!currentClientId) { appMsg('Select a customer first.', 'err'); return; }
   const btn = el('uploadBtn');
   btn.disabled = true;
   appMsg('Uploading and indexing&#8230;', 'ok');
@@ -401,8 +401,8 @@ async function loadClients() {
   const { data, error } = await sb.from('clients').select('id, name, slug, created_at').order('name');
   const box = el('clientTable');
   if (error) { box.innerHTML = '<div class="msg err">' + esc(error.message) + '</div>'; return; }
-  if (!data || !data.length) { box.innerHTML = '<p style="color:#888;font-size:13px;">No clients yet. Add one below.</p>'; return; }
-  let html = '<table><thead><tr><th>Client</th><th>Folder</th><th>Created</th></tr></thead><tbody>';
+  if (!data || !data.length) { box.innerHTML = '<p style="color:#888;font-size:13px;">No customers yet. Add one below.</p>'; return; }
+  let html = '<table><thead><tr><th>Customer</th><th>Folder</th><th>Created</th></tr></thead><tbody>';
   data.forEach(c => {
     html += '<tr><td>' + esc(c.name) + '</td><td><code>' + esc(c.slug || c.id) + '</code></td><td>' + esc((c.created_at||'').slice(0,10)) + '</td></tr>';
   });
@@ -414,7 +414,7 @@ el('createClientBtn').addEventListener('click', async () => {
   const name = el('ncName').value.trim();
   const email = el('ncEmail').value.trim();
   const pass = el('ncPass').value;
-  if (!name) { el('clientMsg').className = 'msg err'; el('clientMsg').textContent = 'Client name required.'; return; }
+  if (!name) { el('clientMsg').className = 'msg err'; el('clientMsg').textContent = 'Customer name required.'; return; }
   el('clientMsg').className = 'msg';
   const { data: { session } } = await sb.auth.getSession();
   const resp = await fetch(CREATE_CLIENT_URL, {
@@ -425,11 +425,11 @@ el('createClientBtn').addEventListener('click', async () => {
   const data = await resp.json();
   if (!resp.ok) {
     el('clientMsg').className = 'msg err';
-    el('clientMsg').textContent = data.error || 'Failed to create client';
+    el('clientMsg').textContent = data.error || 'Failed to create customer';
     return;
   }
   el('clientMsg').className = 'msg ok';
-  el('clientMsg').innerHTML = 'Client <strong>' + esc(data.client.name) + '</strong> created.' +
+  el('clientMsg').innerHTML = 'Customer <strong>' + esc(data.client.name) + '</strong> created.' +
     (data.loginUser ? ' Login: <strong>' + esc(data.loginUser.email) + '</strong>' : '') +
     ' (folder ' + esc(data.client.id) + ')';
   el('ncName').value = ''; el('ncEmail').value = ''; el('ncPass').value = '';
