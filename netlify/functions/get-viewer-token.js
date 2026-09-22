@@ -56,13 +56,16 @@ exports.handler = async (event) => {
   }
 
   // Short-lived token (5 minutes) carrying studyUid + clientId, HMAC-signed.
+  // DICOM UIDs contain dots, so the UID is base64url-encoded (dot-safe) inside
+  // the token; the sig covers the encoded segment so study-json can verify it.
   const exp = Math.floor(Date.now() / 1000) + 300;
-  const payload = `${exp}.${studyUid}.${study.client_id}`;
+  const uidB64 = Buffer.from(studyUid).toString('base64url');
+  const payload = `${exp}.${uidB64}`;
   const sig = crypto.createHmac('sha256', secret).update(payload).digest('base64url');
 
   return {
     statusCode: 200,
     headers: { ...headers, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token: `${exp}.${studyUid}.${sig}` }),
+    body: JSON.stringify({ token: `${exp}.${uidB64}.${sig}` }),
   };
 };

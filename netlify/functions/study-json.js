@@ -26,12 +26,12 @@ exports.handler = async (event) => {
     return { statusCode: 401, headers, body: JSON.stringify({ error: 'Missing token' }) };
   }
 
-  // token format: <exp>.<studyUid>.<sig>
+  // token format: <exp>.<base64url(studyUid)>.<sig>
   const parts = token.split('.');
   if (parts.length !== 3) {
     return { statusCode: 401, headers, body: JSON.stringify({ error: 'Invalid token' }) };
   }
-  const [exp, studyUid, sig] = parts;
+  const [exp, uidB64, sig] = parts;
   const now = Math.floor(Date.now() / 1000);
   if (Number(exp) < now) {
     return { statusCode: 401, headers, body: JSON.stringify({ error: 'Token expired' }) };
@@ -39,11 +39,13 @@ exports.handler = async (event) => {
 
   const expected = crypto
     .createHmac('sha256', secret)
-    .update(`${exp}.${studyUid}`)
+    .update(`${exp}.${uidB64}`)
     .digest('base64url');
   if (!crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(sig))) {
     return { statusCode: 401, headers, body: JSON.stringify({ error: 'Invalid signature' }) };
   }
+
+  const studyUid = Buffer.from(uidB64, 'base64url').toString('utf-8');
 
   const admin = getSupabaseAdmin();
 
