@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin Portal &#8211; IRICO DICOM Viewer</title>
+<style>
+:root { --brand:#b8860b; --dark:#1c1c1c; --danger:#c0392b; --ok:#1e8449; }
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; background:var(--dark); color:#222; min-height:100vh; }
+.topbar { background:var(--dark); color:#fff; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; }
+.topbar h1 { font-size:18px; font-weight:600; }
+.topbar .sub { color:#bbb; font-size:12px; }
+.topbar a { color:#ddd; text-decoration:none; font-size:13px; }
+.card { background:#fff; max-width:900px; margin:28px auto; border-radius:10px; box-shadow:0 6px 24px rgba(0,0,0,.35); overflow:hidden; }
+.card-head { padding:18px 24px; border-bottom:1px solid #eee; display:flex; align-items:center; justify-content:space-between; }
+.card-head h2 { font-size:16px; }
+.card-body { padding:24px; }
+.msg { padding:12px 16px; border-radius:6px; margin-bottom:14px; font-size:14px; display:none; }
+.msg.err { background:#fdecea; color:var(--danger); display:block; }
+.msg.ok { background:#eafaf1; color:var(--ok); display:block; }
+label { display:block; font-size:13px; font-weight:600; margin-bottom:6px; color:#333; }
+input[type=email], input[type=password], input[type=text], select {
+  width:100%; padding:11px 12px; border:1px solid #ccc; border-radius:6px; font-size:14px; margin-bottom:14px;
+}
+button { background:var(--brand); color:#fff; border:0; padding:12px 18px; border-radius:6px; font-size:14px; font-weight:600; cursor:pointer; }
+button:hover { opacity:.92; }
+button.secondary { background:#555; }
+button.danger { background:var(--danger); }
+button:disabled { opacity:.5; cursor:not-allowed; }
+.row { display:flex; gap:14px; }
+.row > div { flex:1; }
+.dropzone {
+  border:2px dashed #bbb; border-radius:8px; padding:40px 20px; text-align:center; color:#777;
+  font-size:14px; margin-bottom:14px; background:#fafafa; cursor:pointer; transition:.15s;
+}
+.dropzone.over { border-color:var(--brand); background:#fdf8ec; color:var(--brand); }
+.progress { background:#eee; border-radius:6px; height:10px; overflow:hidden; margin:8px 0 16px; }
+.progress > div { background:var(--brand); height:100%; width:0; transition:width .2s; }
+.filelist { margin:8px 0 14px; max-height:200px; overflow:auto; border:1px solid #eee; border-radius:6px; }
+.filelist div { padding:6px 10px; font-size:12px; border-bottom:1px solid #f2f2f2; display:flex; justify-content:space-between; }
+.filelist .st.ok { color:var(--ok); }
+.filelist .st.err { color:var(--danger); }
+.hidden { display:none; }
+footer { text-align:center; color:#666; font-size:12px; padding:20px; }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th,td { text-align:left; padding:8px 10px; border-bottom:1px solid #eee; vertical-align:middle; }
+th { color:#555; font-size:12px; text-transform:uppercase; }
+.tabs { display:flex; gap:8px; margin-bottom:18px; }
+.tabs button { background:#eee; color:#333; border-radius:6px; padding:8px 14px; font-weight:600; }
+.tabs button.active { background:var(--brand); color:#fff; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <h1>IRICO DICOM Viewer</h1>
+    <div class="sub">Administration</div>
+  </div>
+  <div>
+    <a href="index.html">&#8592; Back to website</a>
+    <span id="userbox" style="display:none;color:#bbb;margin-left:14px;"></span>
+    <button id="logoutBtn" class="secondary" style="display:none;padding:6px 12px;margin-left:10px;">Log out</button>
+  </div>
+</div>
+
+<div id="loginView" class="card">
+  <div class="card-head"><h2>Admin sign in</h2></div>
+  <div class="card-body">
+    <div id="loginMsg" class="msg"></div>
+    <form id="loginForm">
+      <label for="email">Email</label>
+      <input type="email" id="email" autocomplete="email" required>
+      <label for="password">Password</label>
+      <input type="password" id="password" autocomplete="current-password" required>
+      <button type="submit">Sign in</button>
+    </form>
+  </div>
+</div>
+
+<div id="appView" class="card hidden">
+  <div class="card-head">
+    <h2>DICOM management</h2>
+    <div class="tabs">
+      <button id="tabUpload" class="active" onclick="tab('upload')">Upload</button>
+      <button id="tabClients" onclick="tab('clients')">Clients</button>
+    </div>
+  </div>
+
+  <div class="card-body">
+
+    <div id="uploadTab">
+      <div id="appMsg" class="msg"></div>
+
+      <div class="row">
+        <div>
+          <label for="clientSelect">Client (destination folder)</label>
+          <select id="clientSelect"></select>
+        </div>
+        <div>
+          <label>&nbsp;</label>
+          <button class="secondary" id="newClientBtn" style="width:100%;" onclick="tab('clients')">+ New client</button>
+        </div>
+      </div>
+
+      <div id="dropzone" class="dropzone">
+        Drag &amp; drop a <strong>folder of .dcm files</strong> here, or click to choose.<br>
+        Files are uploaded directly and parsed in your browser.
+      </div>
+      <input type="file" id="fileInput" multiple webkitdirectory style="display:none">
+
+      <div id="filelist" class="filelist hidden"></div>
+      <div class="progress hidden"><div id="pbar"></div></div>
+
+      <button id="uploadBtn" disabled>Upload selected files</button>
+    </div>
+
+    <div id="clientsTab" class="hidden">
+      <div id="clientMsg" class="msg"></div>
+      <h3 style="margin-bottom:12px;font-size:14px;">Existing clients</h3>
+      <div id="clientTable"></div>
+
+      <h3 style="margin:22px 0 12px;font-size:14px;">Add a client</h3>
+      <div class="row">
+        <div>
+          <label for="ncName">Client name</label>
+          <input type="text" id="ncName" placeholder="e.g. Larsen &amp; Toubro">
+        </div>
+        <div>
+          <label for="ncEmail">Client login email (optional)</label>
+          <input type="email" id="ncEmail" placeholder="client@company.com">
+        </div>
+        <div>
+          <label for="ncPass">Login password (optional)</label>
+          <input type="password" id="ncPass" placeholder="minimum 6 chars">
+        </div>
+      </div>
+      <button id="createClientBtn">Create client</button>
+    </div>
+
+  </div>
+</div>
+
+<footer>Industrial Radiographic Inspection Company Private Limited</footer>
+
+<script src="../assets/portal/lib/supabase.js"></script>
+<script src="../assets/portal/lib/dcmjs.min.js"></script>
+<script src="../assets/portal/portal-config.js"></script>
+<script>
+const C = window.PORTAL_CONFIG || {};
+const SUPABASE_URL = C.SUPABASE_URL;
+const SUPABASE_ANON_KEY = C.SUPABASE_ANON_KEY;
+const INDEX_URL = '/.netlify/functions/index-study';
+const CREATE_CLIENT_URL = '/.netlify/functions/admin-create-client';
+const BUCKET = 'irico-dicom';
+
+let sb = null;
+let currentClientId = null;
+let pendingFiles = [];
+
+function el(id) { return document.getElementById(id); }
+function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+function tab(which) {
+  el('uploadTab').classList.toggle('hidden', which !== 'upload');
+  el('clientsTab').classList.toggle('hidden', which !== 'clients');
+  el('tabUpload').classList.toggle('active', which === 'upload');
+  el('tabClients').classList.toggle('active', which === 'clients');
+  if (which === 'clients') loadClients();
+}
+
+async function init() {
+  if (!SUPABASE_URL || SUPABASE_URL.startsWith('PENDING')) {
+    el('loginMsg').textContent = 'Portal not configured: set SUPABASE_URL / anon key in assets/portal/portal-config.js';
+    el('loginMsg').className = 'msg err';
+    return;
+  }
+  sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    if ((session.user.app_metadata || {}).role !== 'admin') { showLogin(); return; }
+    showApp(session);
+  } else { showLogin(); }
+}
+
+function showLogin() {
+  el('loginView').classList.remove('hidden');
+  el('appView').classList.add('hidden');
+  el('logoutBtn').style.display = 'none';
+}
+
+async function showApp(session) {
+  el('loginView').classList.add('hidden');
+  el('appView').classList.remove('hidden');
+  el('logoutBtn').style.display = 'inline-block';
+  el('userbox').style.display = 'inline';
+  el('userbox').textContent = session.user.email || '';
+  await loadClientOptions();
+}
+
+async function loadClientOptions() {
+  const { data, error } = await sb.from('clients').select('id, name').order('name');
+  const sel = el('clientSelect');
+  sel.innerHTML = '';
+  if (error) { appMsg('Could not load clients: ' + error.message, 'err'); return; }
+  (data || []).forEach(c => {
+    const o = document.createElement('option');
+    o.value = c.id; o.textContent = c.name; sel.appendChild(o);
+  });
+  currentClientId = sel.value;
+  sel.onchange = () => { currentClientId = sel.value; };
+}
+
+function appMsg(text, kind) {
+  const m = el('appMsg');
+  m.textContent = text; m.className = 'msg ' + (kind || '');
+}
+
+// ---- upload ---------------------------------------------------------------
+const dz = el('dropzone');
+const fi = el('fileInput');
+dz.onclick = () => fi.click();
+fi.onchange = () => pickFiles(fi.files);
+['dragenter','dragover'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('over'); }));
+['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove('over'); }));
+dz.addEventListener('drop', e => {
+  const items = e.dataTransfer.items;
+  if (!items || !items.length) return;
+  const files = [];
+  const readEntry = (entry, path) => {
+    if (entry.isFile) {
+      entry.file(f => { f.webkitRelativePath = (path ? path + '/' : '') + entry.name; files.push(f); });
+    } else if (entry.isDirectory) {
+      const reader = entry.createReader();
+      const readAll = () => reader.readEntries(entries => {
+        if (!entries.length) return;
+        entries.forEach(en => readEntry(en, path ? path + '/' + entry.name : entry.name));
+        readAll();
+      });
+      readAll();
+    }
+  };
+  const entries = Array.from(items).map(i => i.webkitGetAsEntry()).filter(Boolean);
+  entries.forEach(en => readEntry(en, ''));
+  setTimeout(() => pickFiles(files), 300);
+});
+
+function pickFiles(files) {
+  const arr = Array.from(files).filter(f => f.name.toLowerCase().endsWith('.dcm'));
+  pendingFiles = arr;
+  const list = el('filelist');
+  list.classList.remove('hidden');
+  list.innerHTML = '';
+  arr.forEach(f => {
+    const d = document.createElement('div');
+    d.innerHTML = '<span>' + esc((f.webkitRelativePath || f.name)) + '</span><span class="st">' + fmtSize(f.size) + '</span>';
+    list.appendChild(d);
+  });
+  el('uploadBtn').disabled = !arr.length;
+}
+
+function fmtSize(b) { return b > 1048576 ? (b/1048576).toFixed(1) + ' MB' : Math.round(b/1024) + ' KB'; }
+
+el('uploadBtn').addEventListener('click', async () => {
+  if (!pendingFiles.length) return;
+  if (!currentClientId) { appMsg('Select a client first.', 'err'); return; }
+  const btn = el('uploadBtn');
+  btn.disabled = true;
+  appMsg('Uploading and indexing&#8230;', 'ok');
+
+  const bar = el('pbar'); bar.style.width = '0%';
+  el('progress').classList.remove('hidden');
+
+  const results = [];
+  const total = pendingFiles.length;
+  let done = 0;
+
+  for (const f of pendingFiles) {
+    const rel = (f.webkitRelativePath || f.name);
+    try {
+      const arrayBuf = await f.arrayBuffer();
+      // Parse with dcmjs to extract UIDs + build OHIF metadata
+      const dicomDict = dcmjs.data.DicomMessage.readFile(new Uint8Array(arrayBuf));
+      const ds = dcmjs.data.DicomMetaDictionary.naturalizeDataset(dicomDict.dict);
+      const meta = dcmjs.data.DicomMetaDictionary.dictToDicom(ds, ds._vrMap);
+      const studyUid = meta.StudyInstanceUID;
+      const seriesUid = meta.SeriesInstanceUID;
+      const sopUid = meta.SOPInstanceUID;
+      if (!studyUid || !sopUid) throw new Error('Missing Study/SOP UID');
+
+      // Upload raw file direct to Supabase storage (admin RLS allows insert)
+      const path = `${currentClientId}/studies/${studyUid}/${sopUid}.dcm`;
+      const { error: upErr } = await sb.storage.from(BUCKET).upload(path, f, {
+        contentType: 'application/dicom',
+        upsert: true,
+      });
+      if (upErr) throw new Error(upErr.message);
+      results.push({ rel, studyUid, seriesUid, sopUid, meta });
+    } catch (e) {
+      results.push({ rel, error: e.message || 'failed' });
+    }
+    done++;
+    bar.style.width = Math.round((done / total) * 100) + '%';
+  }
+
+  // Group results into studies -> series -> instances, build OHIF metadata
+  const studiesMap = new Map();
+  results.forEach(r => {
+    if (r.error) return;
+    if (!studiesMap.has(r.studyUid)) {
+      studiesMap.set(r.studyUid, {
+        StudyInstanceUID: r.studyUid,
+        PatientName: r.meta.PatientName,
+        PatientID: r.meta.PatientID,
+        StudyDate: r.meta.StudyDate,
+        StudyTime: r.meta.StudyTime,
+        StudyDescription: r.meta.StudyDescription,
+        AccessionNumber: r.meta.AccessionNumber,
+        Modalities: [r.meta.Modality].filter(Boolean),
+        series: [],
+      });
+    }
+    const study = studiesMap.get(r.studyUid);
+    let ser = study.series.find(s => s.SeriesInstanceUID === r.seriesUid);
+    if (!ser) {
+      ser = {
+        SeriesInstanceUID: r.seriesUid,
+        SeriesNumber: r.meta.SeriesNumber || study.series.length + 1,
+        Modality: r.meta.Modality,
+        instances: [],
+      };
+      study.series.push(ser);
+    }
+    const m = {};
+    Object.keys(r.meta).forEach(k => { if (k !== '_vrMap') m[k] = r.meta[k]; });
+    ser.instances.push({ metadata: m });
+    if (!study.Modalities.includes(r.meta.Modality)) study.Modalities.push(r.meta.Modality);
+  });
+
+  const studies = Array.from(studiesMap.values());
+  studies.forEach(s => { s.NumInstances = s.series.reduce((a,x) => a + x.instances.length, 0); });
+
+  // Store metadata via function
+  const { data: { session } } = await sb.auth.getSession();
+  const failures = results.filter(r => r.error);
+  let indexed = 0;
+  let indexErrors = [];
+  for (const study of studies) {
+    const resp = await fetch(INDEX_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
+      body: JSON.stringify({ clientId: currentClientId, studyUid: study.StudyInstanceUID, metadata: { studies: [study] } }),
+    });
+    if (resp.ok) indexed++; else { const t = await resp.text(); indexErrors.push(study.StudyInstanceUID + ': ' + t); }
+  }
+
+  el('progress').classList.add('hidden');
+  const counts = results.filter(r => !r.error).length;
+  const failCount = failures.length;
+  appMsg(`Uploaded ${counts} files into ${indexed} studies${failCount ? `, ${failCount} failed` : ''}.`, failures.length ? 'err' : 'ok');
+  if (failures.length) {
+    listFailures(failures);
+  }
+  pendingFiles = [];
+  el('uploadBtn').disabled = true;
+  el('filelist').innerHTML = '';
+});
+
+function listFailures(failures) {
+  const list = el('filelist');
+  list.classList.remove('hidden');
+  list.innerHTML = '';
+  failures.forEach(f => {
+    const d = document.createElement('div');
+    d.innerHTML = '<span>' + esc(f.rel) + '</span><span class="st err">' + esc(f.error || 'failed') + '</span>';
+    list.appendChild(d);
+  });
+}
+
+// ---- clients ---------------------------------------------------------------
+async function loadClients() {
+  const { data, error } = await sb.from('clients').select('id, name, slug, created_at').order('name');
+  const box = el('clientTable');
+  if (error) { box.innerHTML = '<div class="msg err">' + esc(error.message) + '</div>'; return; }
+  if (!data || !data.length) { box.innerHTML = '<p style="color:#888;font-size:13px;">No clients yet. Add one below.</p>'; return; }
+  let html = '<table><thead><tr><th>Client</th><th>Folder</th><th>Created</th></tr></thead><tbody>';
+  data.forEach(c => {
+    html += '<tr><td>' + esc(c.name) + '</td><td><code>' + esc(c.slug || c.id) + '</code></td><td>' + esc((c.created_at||'').slice(0,10)) + '</td></tr>';
+  });
+  html += '</tbody></table>';
+  box.innerHTML = html;
+}
+
+el('createClientBtn').addEventListener('click', async () => {
+  const name = el('ncName').value.trim();
+  const email = el('ncEmail').value.trim();
+  const pass = el('ncPass').value;
+  if (!name) { el('clientMsg').className = 'msg err'; el('clientMsg').textContent = 'Client name required.'; return; }
+  el('clientMsg').className = 'msg';
+  const { data: { session } } = await sb.auth.getSession();
+  const resp = await fetch(CREATE_CLIENT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
+    body: JSON.stringify({ name, email: email || undefined, password: pass || undefined }),
+  });
+  const data = await resp.json();
+  if (!resp.ok) {
+    el('clientMsg').className = 'msg err';
+    el('clientMsg').textContent = data.error || 'Failed to create client';
+    return;
+  }
+  el('clientMsg').className = 'msg ok';
+  el('clientMsg').innerHTML = 'Client <strong>' + esc(data.client.name) + '</strong> created.' +
+    (data.loginUser ? ' Login: <strong>' + esc(data.loginUser.email) + '</strong>' : '') +
+    ' (folder ' + esc(data.client.id) + ')';
+  el('ncName').value = ''; el('ncEmail').value = ''; el('ncPass').value = '';
+  loadClients();
+  loadClientOptions();
+};
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  el('loginMsg').className = 'msg';
+  const { data, error } = await sb.auth.signInWithPassword({
+    email: el('email').value.trim(), password: el('password').value,
+  });
+  if (error) { el('loginMsg').className = 'msg err'; el('loginMsg').textContent = 'Sign in failed: ' + error.message; return; }
+  if ((data.session.user.app_metadata || {}).role !== 'admin') {
+    el('loginMsg').className = 'msg err';
+    el('loginMsg').textContent = 'This portal is for administrators only.';
+    await sb.auth.signOut();
+    return;
+  }
+  showApp(data.session);
+});
+
+el('logoutBtn').addEventListener('click', async () => { await sb.auth.signOut(); showLogin(); });
+
+init();
+</script>
+</body>
+</html>

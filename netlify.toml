@@ -1,0 +1,15 @@
+[build]
+  publish = "."
+
+[functions]
+  directory = "netlify/functions"
+
+[[redirects]]
+  from = "/client-portal/*"
+  to = "/client-portal/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin-portal/*"
+  to = "/admin-portal/index.html"
+  status = 200
