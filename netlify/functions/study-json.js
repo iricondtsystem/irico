@@ -78,7 +78,8 @@ exports.handler = async (event) => {
           const instances = await Promise.all(
             (ser.instances || []).map(async (inst) => {
               const sopUid = inst.metadata?.SOPInstanceUID || inst.sopInstanceUid || inst.url;
-              const signed = await signedFor(`${sopUid}.dcm`);
+              const fileName = inst.storageKey || `${sopUid}.dcm`;
+              const signed = await signedFor(fileName);
               return { ...inst, url: signed ? `wadouri:${signed}` : null };
             })
           );

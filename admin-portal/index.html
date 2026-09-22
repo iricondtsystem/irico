@@ -146,6 +146,7 @@ th { color:#555; font-size:12px; text-transform:uppercase; }
 
 <script src="../assets/portal/lib/supabase.js"></script>
 <script src="../assets/portal/lib/dcmjs.min.js"></script>
+<script src="../assets/portal/lib/dicomParser.js"></script>
 <script src="../assets/portal/portal-config.js"></script>
 <script>
 const C = window.PORTAL_CONFIG || {};
@@ -273,14 +274,26 @@ el('uploadBtn').addEventListener('click', async () => {
 
   const results = [];
   const total = pendingFiles.length;
+  const usedKeys = new Set();
   let done = 0;
 
   for (const f of pendingFiles) {
     const rel = (f.webkitRelativePath || f.name);
     try {
       const arrayBuf = await f.arrayBuffer();
+      const u8 = new Uint8Array(arrayBuf);
+      // Industrial RT files often carry multiple ISO-2022 character sets, which
+      // dcmjs rejects. Locate SpecificCharacterSet (0008,0005) with dicomParser
+      // and blank its value so dcmjs can read the dataset.
+      try {
+        const probe = dicomParser.parseDicom(u8);
+        const csEl = probe.elements && probe.elements['x00080005'];
+        if (csEl && csEl.dataOffset != null && csEl.length) {
+          u8.fill(0x20, csEl.dataOffset, csEl.dataOffset + csEl.length);
+        }
+      } catch (e) { /* non-fatal: let dcmjs try the original bytes */ }
       // Parse with dcmjs to extract UIDs + build OHIF metadata
-      const dicomDict = dcmjs.data.DicomMessage.readFile(new Uint8Array(arrayBuf));
+      const dicomDict = dcmjs.data.DicomMessage.readFile(u8);
       const ds = dcmjs.data.DicomMetaDictionary.naturalizeDataset(dicomDict.dict);
       const meta = dcmjs.data.DicomMetaDictionary.dictToDicom(ds, ds._vrMap);
       const studyUid = meta.StudyInstanceUID;
@@ -288,14 +301,20 @@ el('uploadBtn').addEventListener('click', async () => {
       const sopUid = meta.SOPInstanceUID;
       if (!studyUid || !sopUid) throw new Error('Missing Study/SOP UID');
 
+      // Some vendors reuse SOPInstanceUID across different images; make the
+      // storage key unique so distinct files never overwrite each other.
+      let storageKey = `${sopUid}.dcm`;
+      for (let i = 1; usedKeys.has(storageKey); i++) storageKey = `${sopUid}__${i}.dcm`;
+      usedKeys.add(storageKey);
+
       // Upload raw file direct to Supabase storage (admin RLS allows insert)
-      const path = `${currentClientId}/studies/${studyUid}/${sopUid}.dcm`;
+      const path = `${currentClientId}/studies/${studyUid}/${storageKey}`;
       const { error: upErr } = await sb.storage.from(BUCKET).upload(path, f, {
         contentType: 'application/dicom',
         upsert: true,
       });
       if (upErr) throw new Error(upErr.message);
-      results.push({ rel, studyUid, seriesUid, sopUid, meta });
+      results.push({ rel, studyUid, seriesUid, sopUid, meta, storageKey });
     } catch (e) {
       results.push({ rel, error: e.message || 'failed' });
     }
@@ -333,7 +352,7 @@ el('uploadBtn').addEventListener('click', async () => {
     }
     const m = {};
     Object.keys(r.meta).forEach(k => { if (k !== '_vrMap') m[k] = r.meta[k]; });
-    ser.instances.push({ metadata: m });
+    ser.instances.push({ metadata: m, storageKey: r.storageKey });
     if (!study.Modalities.includes(r.meta.Modality)) study.Modalities.push(r.meta.Modality);
   });
 
