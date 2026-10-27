@@ -203,7 +203,141 @@ img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
 				.lg-thumb-item.active {
 					opacity: 1;
 				}
-	         </style></head>
+	         </style>
+<style>
+#irico-contact-form .irico-form-section {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  flex: 0 0 100%;
+  padding: 0 5px;
+  margin: 8px 0 12px;
+}
+#irico-contact-form .irico-form-section:not(:first-child) {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(102, 101, 101, 0.25);
+}
+#irico-contact-form .irico-section-title {
+  margin: 0 0 4px;
+  color: #2E3674;
+  font-size: 20px;
+  line-height: 1.3;
+}
+#irico-contact-form .irico-section-text {
+  margin: 0;
+  color: #666565;
+  font-size: 14px;
+  line-height: 1.5;
+}
+#irico-contact-form .elementor-field-label {
+  display: block;
+  width: 100%;
+  color: #2E3674;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 6px;
+  padding: 0;
+}
+#irico-contact-form .irico-required {
+  color: #E37327;
+  font-weight: 700;
+}
+#irico-contact-form .irico-optional {
+  color: #7A7A7A;
+  font-size: 12px;
+  font-weight: 400;
+}
+#irico-contact-form .elementor-field-group {
+  margin-bottom: 18px;
+}
+#irico-contact-form .elementor-field-textual {
+  border-radius: 4px;
+  min-height: 44px;
+  color: #2A2A2A;
+}
+#irico-contact-form .elementor-field-textual::placeholder {
+  color: #888686;
+  opacity: 1;
+}
+#irico-contact-form textarea.elementor-field-textual {
+  min-height: 90px;
+  resize: vertical;
+}
+#irico-contact-form .elementor-field-textual:focus {
+  border-color: #E37327;
+  box-shadow: 0 0 0 1px rgba(227, 115, 39, 0.35);
+}
+#irico-contact-form .irico-file-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  background: #F3EFEC;
+  border: 1px dashed #666565;
+  border-radius: 4px;
+  color: #2A2A2A;
+  font-size: 14px;
+}
+#irico-contact-form .irico-file-input::file-selector-button {
+  margin-right: 12px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 3px;
+  background: #2E3674;
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+#irico-contact-form .elementor-field-type-checkbox .elementor-field-subgroup {
+  width: 100%;
+}
+#irico-contact-form .elementor-field-type-checkbox .elementor-field-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+}
+#irico-contact-form .elementor-field-type-checkbox input[type="checkbox"] {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+  accent-color: #E37327;
+}
+#irico-contact-form .elementor-field-type-checkbox label {
+  flex: 1 1 auto;
+  color: #2A2A2A;
+  font-size: 14px;
+  line-height: 1.5;
+}
+#irico-contact-form .irico-submit {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+#irico-contact-form .irico-submit:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+#irico-contact-form .elementor-select-wrapper select {
+  border-radius: 4px;
+  min-height: 44px;
+}
+@media (max-width: 767px) {
+  #irico-contact-form .elementor-col-50 {
+    width: 100%;
+    max-width: 100%;
+    flex: 0 0 100%;
+  }
+  #irico-contact-form .irico-section-title {
+    font-size: 18px;
+  }
+}
+</style>
+</head>
 <body class="wp-singular page-template-default page page-id-1970 wp-embed-responsive wp-theme-hello-elementor ehf-template-hello-elementor ehf-stylesheet-hello-elementor hello-elementor-default elementor-default elementor-kit-9 elementor-page elementor-page-1970">
 
 
@@ -573,65 +707,188 @@ img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
 		</div>
 						</div>
 				<div class="elementor-element elementor-element-91b8ef8 elementor-button-align-stretch elementor-widget elementor-widget-form" data-id="91b8ef8" data-element_type="widget" data-e-type="widget" data-settings="{&quot;step_next_label&quot;:&quot;Next&quot;,&quot;step_previous_label&quot;:&quot;Previous&quot;,&quot;button_width&quot;:&quot;100&quot;,&quot;step_type&quot;:&quot;number_text&quot;,&quot;step_icon_shape&quot;:&quot;circle&quot;}" data-widget_type="form.default">
-							<form id="irico-contact-form" class="elementor-form" method="post" name="contact" aria-label="Contact form" data-netlify="true" netlify-honeypot="bot-field">
+							<form id="irico-contact-form" class="elementor-form irico-form" method="post" action="/contact-us/" name="contact" aria-label="Contact form" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data">
 			<input type="hidden" name="form-name" value="contact"/>
 			<input type="hidden" name="subject" value="Website enquiry from iricondt.in"/>
 			<p class="irico-honeypot" aria-hidden="true" style="display:none">
 				<label>Do not fill this out if you are human: <input name="bot-field" /></label>
 			</p>
-			<input type="hidden" name="post_id" value="1970"/>
-			<input type="hidden" name="form_id" value="91b8ef8"/>
-			<input type="hidden" name="referer_title" value="Contact Us" />
+			<div class="elementor-form-fields-wrapper elementor-labels-above">
+				<div class="irico-form-section elementor-column elementor-col-100">
+					<h3 class="irico-section-title">Your Details</h3>
+					<p class="irico-section-text">Tell us who we should contact about this enquiry.</p>
+				</div>
 
-							<input type="hidden" name="queried_id" value="1970"/>
-			
-			<div class="elementor-form-fields-wrapper elementor-labels-">
-								<div class="elementor-field-type-text elementor-field-group elementor-column elementor-field-group-name elementor-col-100">
-												<label for="form-field-name" class="elementor-field-label elementor-screen-only">
-								Name							</label>
-														<input size="1" type="text" name="form_fields[name]" id="form-field-name" class="elementor-field elementor-size-sm  elementor-field-textual" placeholder="Name">
-											</div>
-								<div class="elementor-field-type-email elementor-field-group elementor-column elementor-field-group-email elementor-col-100 elementor-field-required">
-												<label for="form-field-email" class="elementor-field-label elementor-screen-only">
-								Email							</label>
-														<input size="1" type="email" name="form_fields[email]" id="form-field-email" class="elementor-field elementor-size-sm  elementor-field-textual" placeholder="Email" required="required">
-											</div>
-								<div class="elementor-field-type-tel elementor-field-group elementor-column elementor-field-group-field_70b40b9 elementor-col-100 elementor-field-required">
-												<label for="form-field-field_70b40b9" class="elementor-field-label elementor-screen-only">
-								Mobile							</label>
-								<input size="1" type="tel" name="form_fields[field_70b40b9]" id="form-field-field_70b40b9" class="elementor-field elementor-size-sm  elementor-field-textual" placeholder="Mobile No." required="required" pattern="[0-9()#&amp;+*-=.]+" title="Only numbers and phone characters (#, -, *, etc) are accepted.">
+				<div class="elementor-field-type-text elementor-field-group elementor-column elementor-field-group-contact_person elementor-col-50 elementor-field-required">
+					<label for="form-field-contact-person" class="elementor-field-label">Contact Person <span class="irico-required">*</span></label>
+					<input size="1" type="text" name="contact_person" id="form-field-contact-person" class="elementor-field elementor-size-sm elementor-field-textual" placeholder="Full name" required="required" autocomplete="name">
+				</div>
+				<div class="elementor-field-type-text elementor-field-group elementor-column elementor-field-group-company elementor-col-50 elementor-field-required">
+					<label for="form-field-company" class="elementor-field-label">Company / Organisation <span class="irico-required">*</span></label>
+					<input size="1" type="text" name="company" id="form-field-company" class="elementor-field elementor-size-sm elementor-field-textual" placeholder="Company name" required="required" autocomplete="organization">
+				</div>
 
+				<div class="elementor-field-type-text elementor-field-group elementor-column elementor-field-group-designation elementor-col-50">
+					<label for="form-field-designation" class="elementor-field-label">Designation <span class="irico-optional">(optional)</span></label>
+					<input size="1" type="text" name="designation" id="form-field-designation" class="elementor-field elementor-size-sm elementor-field-textual" placeholder="Your role" autocomplete="organization-title">
+				</div>
+				<div class="elementor-field-type-text elementor-field-group elementor-column elementor-field-group-city elementor-col-50 elementor-field-required">
+					<label for="form-field-city" class="elementor-field-label">City / Location <span class="irico-required">*</span></label>
+					<input size="1" type="text" name="city" id="form-field-city" class="elementor-field elementor-size-sm elementor-field-textual" placeholder="City" required="required" autocomplete="address-level2">
+				</div>
+
+				<div class="elementor-field-type-email elementor-field-group elementor-column elementor-field-group-email elementor-col-50 elementor-field-required">
+					<label for="form-field-email" class="elementor-field-label">Email <span class="irico-required">*</span></label>
+					<input size="1" type="email" name="email" id="form-field-email" class="elementor-field elementor-size-sm elementor-field-textual" placeholder="name@company.com" required="required" autocomplete="email">
+				</div>
+				<div class="elementor-field-type-tel elementor-field-group elementor-column elementor-field-group-mobile elementor-col-50 elementor-field-required">
+					<label for="form-field-mobile" class="elementor-field-label">Mobile <span class="irico-required">*</span></label>
+					<input size="1" type="tel" name="mobile" id="form-field-mobile" class="elementor-field elementor-size-sm elementor-field-textual" placeholder="+91 98765 43210" required="required" pattern="[0-9+\(\)\- ]+" title="Only numbers and phone characters are accepted." autocomplete="tel">
+				</div>
+
+				<div class="irico-form-section elementor-column elementor-col-100">
+					<h3 class="irico-section-title">Inspection Requirement</h3>
+					<p class="irico-section-text">Share the service, location and timeline so we can route your enquiry to the right team.</p>
+				</div>
+
+				<div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-industry elementor-col-50 elementor-field-required">
+					<label for="form-field-industry" class="elementor-field-label">Industry / Sector <span class="irico-required">*</span></label>
+					<div class="elementor-field elementor-select-wrapper remove-before">
+						<div class="select-caret-down-wrapper">
+							<svg aria-hidden="true" class="e-font-icon-svg e-eicon-caret-down" viewBox="0 0 571.4 571.4" xmlns="http://www.w3.org/2000/svg"><path d="M571 393Q571 407 561 418L311 668Q300 679 286 679T261 668L11 418Q0 407 0 393T11 368 36 357H536Q550 357 561 368T571 393Z"></path></svg>
 						</div>
-								<div class="elementor-field-type-text elementor-field-group elementor-column elementor-field-group-field_c52f940 elementor-col-100 elementor-field-required">
-												<label for="form-field-field_c52f940" class="elementor-field-label elementor-screen-only">
-								City							</label>
-														<input size="1" type="text" name="form_fields[field_c52f940]" id="form-field-field_c52f940" class="elementor-field elementor-size-sm  elementor-field-textual" placeholder="Your City" required="required">
-											</div>
-								<div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-field_600009a elementor-col-100">
-												<label for="form-field-field_600009a" class="elementor-field-label elementor-screen-only">
-								Service							</label>
-								<div class="elementor-field elementor-select-wrapper remove-before ">
-			<div class="select-caret-down-wrapper">
-				<svg aria-hidden="true" class="e-font-icon-svg e-eicon-caret-down" viewBox="0 0 571.4 571.4" xmlns="http://www.w3.org/2000/svg"><path d="M571 393Q571 407 561 418L311 668Q300 679 286 679T261 668L11 418Q0 407 0 393T11 368 36 357H536Q550 357 561 368T571 393Z"></path></svg>			</div>
-			<select name="form_fields[field_600009a]" id="form-field-field_600009a" class="elementor-field-textual elementor-size-sm">
-									<option value="Radiographic Examination">Radiographic Examination</option>
-									<option value="Ultrasonic Examination">Ultrasonic Examination</option>
-									<option value="Magnetic Particle Examination">Magnetic Particle Examination</option>
-									<option value="Liquid Penetrant Examination">Liquid Penetrant Examination</option>
-									<option value="Casting Upgradation">Casting Upgradation</option>
-									<option value="Visual Examination">Visual Examination</option>
-							</select>
-		</div>
+						<select name="industry" id="form-field-industry" class="elementor-field-textual elementor-size-sm" required="required">
+							<option value="" selected disabled>Select industry</option>
+							<option value="Refineries &amp; Petrochemicals">Refineries &amp; Petrochemicals</option>
+							<option value="Thermal Power">Thermal Power</option>
+							<option value="Nuclear Power">Nuclear Power</option>
+							<option value="Aerospace / Defence / ISRO">Aerospace / Defence / ISRO</option>
+							<option value="Pipelines">Pipelines</option>
+							<option value="Pressure Vessels / Storage Tanks">Pressure Vessels / Storage Tanks</option>
+							<option value="Foundries &amp; Castings">Foundries &amp; Castings</option>
+							<option value="Automotive Components">Automotive Components</option>
+							<option value="Marine / Hull Structures">Marine / Hull Structures</option>
+							<option value="Valves">Valves</option>
+							<option value="Other">Other</option>
+						</select>
+					</div>
+				</div>
+				<div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-service elementor-col-50 elementor-field-required">
+					<label for="form-field-service" class="elementor-field-label">Service Required <span class="irico-required">*</span></label>
+					<div class="elementor-field elementor-select-wrapper remove-before">
+						<div class="select-caret-down-wrapper">
+							<svg aria-hidden="true" class="e-font-icon-svg e-eicon-caret-down" viewBox="0 0 571.4 571.4" xmlns="http://www.w3.org/2000/svg"><path d="M571 393Q571 407 561 418L311 668Q300 679 286 679T261 668L11 418Q0 407 0 393T11 368 36 357H536Q550 357 561 368T571 393Z"></path></svg>
 						</div>
-								<div class="elementor-field-type-textarea elementor-field-group elementor-column elementor-field-group-message elementor-col-100">
-												<label for="form-field-message" class="elementor-field-label elementor-screen-only">
-								Message							</label>
-						<textarea class="elementor-field-textual elementor-field  elementor-size-sm" name="form_fields[message]" id="form-field-message" rows="4" placeholder="Message"></textarea>				</div>
-								<div class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100 e-form__buttons">
-					<button class="elementor-button elementor-size-sm" type="submit">
+						<select name="service" id="form-field-service" class="elementor-field-textual elementor-size-sm" required="required">
+							<option value="" selected disabled>Select service</option>
+							<option value="Radiographic Testing (Gamma)">Radiographic Testing (Gamma)</option>
+							<option value="Radiographic Testing (X-Ray)">Radiographic Testing (X-Ray)</option>
+							<option value="Linac Radiography">Linac Radiography</option>
+							<option value="Ultrasonic Testing (UT)">Ultrasonic Testing (UT)</option>
+							<option value="Phased Array (PAUT)">Phased Array (PAUT)</option>
+							<option value="TOFD">TOFD</option>
+							<option value="Magnetic Particle Testing (MPT)">Magnetic Particle Testing (MPT)</option>
+							<option value="Liquid / Dye Penetrant Testing (PT/DPT)">Liquid / Dye Penetrant Testing (PT/DPT)</option>
+							<option value="Visual Testing (VT)">Visual Testing (VT)</option>
+							<option value="Casting Upgradation">Casting Upgradation</option>
+							<option value="Other / Not sure">Other / Not sure</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-facility elementor-col-50">
+					<label for="form-field-facility" class="elementor-field-label">Preferred IRICO Facility <span class="irico-optional">(optional)</span></label>
+					<div class="elementor-field elementor-select-wrapper remove-before">
+						<div class="select-caret-down-wrapper">
+							<svg aria-hidden="true" class="e-font-icon-svg e-eicon-caret-down" viewBox="0 0 571.4 571.4" xmlns="http://www.w3.org/2000/svg"><path d="M571 393Q571 407 561 418L311 668Q300 679 286 679T261 668L11 418Q0 407 0 393T11 368 36 357H536Q550 357 561 368T571 393Z"></path></svg>
+						</div>
+						<select name="facility" id="form-field-facility" class="elementor-field-textual elementor-size-sm">
+							<option value="">No preference</option>
+							<option value="Chennai">Chennai</option>
+							<option value="Coimbatore">Coimbatore</option>
+							<option value="Trichy">Trichy</option>
+							<option value="Site / Project Location">Site / Project Location</option>
+							<option value="Not sure">Not sure</option>
+						</select>
+					</div>
+				</div>
+				<div class="elementor-field-type-text elementor-field-group elementor-column elementor-field-group-site_location elementor-col-50">
+					<label for="form-field-site-location" class="elementor-field-label">Project / Site Location <span class="irico-optional">(optional)</span></label>
+					<input size="1" type="text" name="site_location" id="form-field-site-location" class="elementor-field elementor-size-sm elementor-field-textual" placeholder="Plant / site city">
+				</div>
+
+				<div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-timeline elementor-col-50 elementor-field-required">
+					<label for="form-field-timeline" class="elementor-field-label">Project Timeline <span class="irico-required">*</span></label>
+					<div class="elementor-field elementor-select-wrapper remove-before">
+						<div class="select-caret-down-wrapper">
+							<svg aria-hidden="true" class="e-font-icon-svg e-eicon-caret-down" viewBox="0 0 571.4 571.4" xmlns="http://www.w3.org/2000/svg"><path d="M571 393Q571 407 561 418L311 668Q300 679 286 679T261 668L11 418Q0 407 0 393T11 368 36 357H536Q550 357 561 368T571 393Z"></path></svg>
+						</div>
+						<select name="timeline" id="form-field-timeline" class="elementor-field-textual elementor-size-sm" required="required">
+							<option value="" selected disabled>Select timeline</option>
+							<option value="Immediate / Emergency">Immediate / Emergency</option>
+							<option value="Within 1 week">Within 1 week</option>
+							<option value="2-4 weeks">2-4 weeks</option>
+							<option value="1-3 months">1-3 months</option>
+							<option value="Planning / Budgeting stage">Planning / Budgeting stage</option>
+						</select>
+					</div>
+				</div>
+				<div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-contact_method elementor-col-50">
+					<label for="form-field-contact-method" class="elementor-field-label">Preferred Contact Method <span class="irico-optional">(optional)</span></label>
+					<div class="elementor-field elementor-select-wrapper remove-before">
+						<div class="select-caret-down-wrapper">
+							<svg aria-hidden="true" class="e-font-icon-svg e-eicon-caret-down" viewBox="0 0 571.4 571.4" xmlns="http://www.w3.org/2000/svg"><path d="M571 393Q571 407 561 418L311 668Q300 679 286 679T261 668L11 418Q0 407 0 393T11 368 36 357H536Q550 357 561 368T571 393Z"></path></svg>
+						</div>
+						<select name="contact_method" id="form-field-contact-method" class="elementor-field-textual elementor-size-sm">
+							<option value="">No preference</option>
+							<option value="Email">Email</option>
+							<option value="Phone">Phone</option>
+							<option value="WhatsApp">WhatsApp</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="elementor-field-type-textarea elementor-field-group elementor-column elementor-field-group-scope_details elementor-col-100">
+					<label for="form-field-scope-details" class="elementor-field-label">Scope / Equipment Details <span class="irico-optional">(optional)</span></label>
+					<textarea class="elementor-field-textual elementor-field elementor-size-sm" name="scope_details" id="form-field-scope-details" rows="3" placeholder="Equipment, material, quantity, applicable standard, etc."></textarea>
+				</div>
+				<div class="elementor-field-type-textarea elementor-field-group elementor-column elementor-field-group-message elementor-col-100">
+					<label for="form-field-message" class="elementor-field-label">Message / Requirements <span class="irico-optional">(optional)</span></label>
+					<textarea class="elementor-field-textual elementor-field elementor-size-sm" name="message" id="form-field-message" rows="3" placeholder="Anything else we should know?"></textarea>
+				</div>
+
+				<div class="irico-form-section elementor-column elementor-col-100">
+					<h3 class="irico-section-title">Attachments <span class="irico-optional">(optional)</span></h3>
+					<p class="irico-section-text">Upload drawings, photos or specifications. Max 8 MB total; one file per field.</p>
+				</div>
+
+				<div class="elementor-field-type-file elementor-field-group elementor-column elementor-field-group-attachment_drawing elementor-col-50">
+					<label for="form-field-attachment-drawing" class="elementor-field-label">Drawing / Specification</label>
+					<input type="file" name="attachment_drawing" id="form-field-attachment-drawing" class="elementor-field elementor-size-sm irico-file-input" accept=".pdf,.dwg,.dxf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png">
+				</div>
+				<div class="elementor-field-type-file elementor-field-group elementor-column elementor-field-group-attachment_photo elementor-col-50">
+					<label for="form-field-attachment-photo" class="elementor-field-label">Photo</label>
+					<input type="file" name="attachment_photo" id="form-field-attachment-photo" class="elementor-field elementor-size-sm irico-file-input" accept=".jpg,.jpeg,.png,.webp">
+				</div>
+				<div class="elementor-field-type-file elementor-field-group elementor-column elementor-field-group-attachment_spec elementor-col-100">
+					<label for="form-field-attachment-spec" class="elementor-field-label">Other Document</label>
+					<input type="file" name="attachment_spec" id="form-field-attachment-spec" class="elementor-field elementor-size-sm irico-file-input" accept=".pdf,.doc,.docx,.xls,.xlsx,.zip">
+				</div>
+
+				<div class="elementor-field-type-checkbox elementor-field-group elementor-column elementor-field-group-consent elementor-col-100 elementor-field-required">
+					<div class="elementor-field-subgroup">
+						<span class="elementor-field-option">
+							<input type="checkbox" name="consent" id="form-field-consent" value="yes" required="required">
+							<label for="form-field-consent">I agree to be contacted by IRICO about this enquiry. <span class="irico-required">*</span></label>
+						</span>
+					</div>
+				</div>
+
+				<div class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100 e-form__buttons">
+					<button class="elementor-button elementor-size-sm irico-submit" type="submit">
 						<span class="elementor-button-content-wrapper">
-																						<span class="elementor-button-text">Submit</span>
-													</span>
+							<span class="elementor-button-text">Send Enquiry</span>
+						</span>
 					</button>
 				</div>
 			</div>
@@ -891,6 +1148,8 @@ var e="script#wp-emoji-settings",t=document.querySelector(e);if(!(t instanceof H
   if (!form) return;
   var status = document.getElementById('irico-form-status');
   var button = form.querySelector('button[type="submit"]');
+  var maxFileBytes = 8 * 1024 * 1024;
+
   function show(kind, message) {
     status.style.display = 'block';
     if (kind === 'info') {
@@ -908,27 +1167,78 @@ var e="script#wp-emoji-settings",t=document.querySelector(e);if(!(t instanceof H
     }
     status.textContent = message;
   }
+
+  function selectedFiles() {
+    return Array.prototype.slice.call(form.querySelectorAll('input[type="file"]')).reduce(function (files, input) {
+      return files.concat(Array.prototype.slice.call(input.files || []));
+    }, []);
+  }
+
+  function totalFileBytes(files) {
+    return files.reduce(function (total, file) {
+      return total + file.size;
+    }, 0);
+  }
+
   document.addEventListener('submit', function (event) {
     if (event.target !== form) return;
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
+
     if (!form.reportValidity()) return;
+
+    var files = selectedFiles();
+    if (totalFileBytes(files) > maxFileBytes) {
+      show('error', 'Attachments are too large. Please keep the total under 8 MB. For larger files, email us at iricochennai@gmail.com.');
+      return;
+    }
+
     var original = button ? button.innerHTML : '';
-    if (button) { button.disabled = true; button.textContent = 'Sending...'; }
-    show('info', 'Sending your enquiry...');
-    fetch('/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams(new FormData(form)).toString()
-    }).then(function (response) {
+    if (button) {
+      button.disabled = true;
+      button.textContent = 'Sending...';
+    }
+    show('info', files.length ? 'Uploading your enquiry and attachments...' : 'Sending your enquiry...');
+
+    var request;
+    if (files.length) {
+      var fileData = new FormData(form);
+      Array.prototype.slice.call(form.querySelectorAll('input[type="file"]')).forEach(function (input) {
+        if (!input.files || !input.files.length) fileData.delete(input.name);
+      });
+      request = fetch('/contact-us/', {
+        method: 'POST',
+        body: fileData
+      });
+    } else {
+      var data = new FormData(form);
+      data.delete('attachment_drawing');
+      data.delete('attachment_photo');
+      data.delete('attachment_spec');
+      request = fetch('/contact-us/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(data).toString()
+      });
+    }
+
+    request.then(function (response) {
+      if (response.status === 413) throw new Error('too-large');
       if (!response.ok) throw new Error('HTTP ' + response.status);
       form.reset();
       form.style.display = 'none';
       show('success', 'Thank you - your enquiry has been sent. We will contact you shortly.');
-    }).catch(function () {
-      if (button) { button.disabled = false; button.innerHTML = original; }
-      show('error', 'Sorry, your message could not be sent. Please email iricochennai@gmail.com or call 044-2688 0235.');
+    }).catch(function (error) {
+      if (button) {
+        button.disabled = false;
+        button.innerHTML = original;
+      }
+      if (error && error.message === 'too-large') {
+        show('error', 'The total upload is too large. Please keep attachments under 8 MB. For larger files, email us at iricochennai@gmail.com.');
+      } else {
+        show('error', 'Sorry, your message could not be sent. Please email iricochennai@gmail.com or call 044-2688 0235.');
+      }
     });
   }, true);
 })();
