@@ -573,7 +573,11 @@ img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
 		</div>
 						</div>
 				<div class="elementor-element elementor-element-91b8ef8 elementor-button-align-stretch elementor-widget elementor-widget-form" data-id="91b8ef8" data-element_type="widget" data-e-type="widget" data-settings="{&quot;step_next_label&quot;:&quot;Next&quot;,&quot;step_previous_label&quot;:&quot;Previous&quot;,&quot;button_width&quot;:&quot;100&quot;,&quot;step_type&quot;:&quot;number_text&quot;,&quot;step_icon_shape&quot;:&quot;circle&quot;}" data-widget_type="form.default">
-							<form class="elementor-form" method="post" name="New Form" aria-label="New Form">
+							<form id="irico-contact-form" class="elementor-form" method="post" name="contact" aria-label="Contact form" data-netlify="true" netlify-honeypot="bot-field">
+			<input type="hidden" name="form-name" value="contact"/>
+			<p class="irico-honeypot" aria-hidden="true" style="display:none">
+				<label>Do not fill this out if you are human: <input name="bot-field" /></label>
+			</p>
 			<input type="hidden" name="post_id" value="1970"/>
 			<input type="hidden" name="form_id" value="91b8ef8"/>
 			<input type="hidden" name="referer_title" value="Contact Us" />
@@ -631,6 +635,7 @@ img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
 				</div>
 			</div>
 		</form>
+		<div id="irico-form-status" role="status" aria-live="polite" style="display:none;margin-top:16px;padding:14px 18px;border-radius:6px;font-size:16px;line-height:1.5"></div>
 						</div>
 					</div>
 				</div>
@@ -879,5 +884,53 @@ var e="script#wp-emoji-settings",t=document.querySelector(e);if(!(t instanceof H
 //# sourceURL=https://iricondt.in/wp-includes/js/wp-emoji-loader.min.js
 </script>
 
+<script>
+(function () {
+  var form = document.getElementById('irico-contact-form');
+  if (!form) return;
+  var status = document.getElementById('irico-form-status');
+  var button = form.querySelector('button[type="submit"]');
+  function show(kind, message) {
+    status.style.display = 'block';
+    if (kind === 'info') {
+      status.style.background = '#eef4fb';
+      status.style.border = '1px solid #1565c0';
+      status.style.color = '#0d47a1';
+    } else if (kind === 'success') {
+      status.style.background = '#e8f6ec';
+      status.style.border = '1px solid #2e7d32';
+      status.style.color = '#1b5e20';
+    } else {
+      status.style.background = '#fdecea';
+      status.style.border = '1px solid #c62828';
+      status.style.color = '#b71c1c';
+    }
+    status.textContent = message;
+  }
+  document.addEventListener('submit', function (event) {
+    if (event.target !== form) return;
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+    if (!form.reportValidity()) return;
+    var original = button ? button.innerHTML : '';
+    if (button) { button.disabled = true; button.textContent = 'Sending...'; }
+    show('info', 'Sending your enquiry...');
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(new FormData(form)).toString()
+    }).then(function (response) {
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      form.reset();
+      form.style.display = 'none';
+      show('success', 'Thank you - your enquiry has been sent. We will contact you shortly.');
+    }).catch(function () {
+      if (button) { button.disabled = false; button.innerHTML = original; }
+      show('error', 'Sorry, your message could not be sent. Please email iricochennai@gmail.com or call 044-2688 0235.');
+    });
+  }, true);
+})();
+</script>
 </body>
 </html>
